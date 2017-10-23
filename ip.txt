@@ -1,3 +1,5 @@
 IP address: 18.216.92.165
 Git Hub url: https://github.com/harshildp/Login-Registration
 Youtube video url: https://youtu.be/TW_baP8u_Gs
+
+* The style sheets don't work on the AWS server. 
