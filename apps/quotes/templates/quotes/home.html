@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    {% load quote_tags %}
+    <link rel="stylesheet" href="{% static '/quotes/CSS/style.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+        crossorigin="anonymous"></script>
+    <title>Home Quotes</title>
+</head>
+
+<body class='container'>
+    <div class='header'>
+        <a href='/logoff'>Log Off</a>
+    </div>
+    <h1>Welcome, {{request.session.name}}</h1>
+    <div class='row justify-content-center'>
+        <div class='col-md-6'>
+            <h3>Quotable Quotes</h3>
+            <div class='quotes'>
+                {% if other %} {% for quote in other %}
+                <div class='quote'>
+                    <p><b>{{quote.author}}:</b> {{quote.message}}</p>
+                        <small>Posted by
+                            <a href='/users/{{quote.poster.id}}'>{{quote.poster.first_name}} </a>
+                            {{quote.created_at|time_ago}}
+                        </small>
+
+                    <form action='/quotes/favorite/{{quote.id}}' method='POST'>
+                        {% csrf_token %}
+                        <button class="btn btn-success">Favorite</button>
+                    </form>
+                </div>
+                {% endfor %} {% endif %}
+            </div>
+        </div>
+        <div class='col-md-6'>
+            <h3>Favorites</h3>
+            <div class='fav_quotes'>
+                {% if favorites%} {% for quote in favorites %}
+                <div class='quote'>
+                    <p>{{quote.author}}: {{quote.message}}</p>
+                        <small>Posted by
+                            <a href='/users/{{quote.poster.id}}'>{{quote.poster.first_name}} </a>
+                            {{quote.created_at|time_ago}}
+                        </small>
+                    <form action='/quotes/unfavorite/{{quote.id}}' method='POST'>
+                        {% csrf_token %}
+                        <button class="btn btn-danger">Unfavorite</button>
+                    </form>
+                </div>
+                {% endfor %} {% endif %}
+            </div>
+            <h3>Add a Quote</h3>
+            <form action='/quotes/add' method='POST'>
+                {% csrf_token %}
+                <div class='form-group'>
+                    {% include 'quotes/error.html' with tag='author error' %}
+                    <input type="text" name="author" class="form-control" placeholder='Quote by'>
+                </div>
+                <div class='form-group'>
+                    {% include 'quotes/error.html' with tag='message error' %}
+                    <Textarea name="message" class="form-control" placeholder='Quote Message...'></Textarea>
+                </div>
+                <Button type="submit" class="btn btn-primary">Add Quote</Button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

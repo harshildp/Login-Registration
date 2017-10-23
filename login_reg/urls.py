@@ -17,4 +17,7 @@ from django.conf.urls import url, include
 
 urlpatterns = [
     url(r'^', include('apps.loginReg.urls')),
+    url(r'^users/', include('apps.quotes.urls')),
+    url(r'^quotes/', include('apps.quotes.urls')),    
+    
 ]

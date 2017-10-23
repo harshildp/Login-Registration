@@ -7,13 +7,13 @@ from django.contrib.messages import error
 #=================================================================
 
 def index(request):
+    if 'user_id' in request.session:
+        return redirect('/quotes')
     return render(request, 'loginReg/index.html')
 
 def home(request):
     if 'user_id' not in request.session:
         return redirect('/')
-
-    print request.session['user_id']
     
     return render(request, 'loginReg/home.html')
 
@@ -25,8 +25,8 @@ def login(request):
     user = User.objects.login(request.POST)
     if user:
         request.session['user_id'] = user.id
-        print request.session['user_id']
-        return redirect('/home')
+        request.session['name'] = user.first_name
+        return redirect('/quotes')
     
     error(request, 'Invalid email or password')
     return redirect('/')
@@ -40,7 +40,8 @@ def register(request):
     else:
         user = User.objects.createUser(request.POST)
         request.session['user_id'] = user.id
-        return redirect('/home')
+        request.session['name'] = user.first_name        
+        return redirect('/quotes')
     
 def logoff(request):
     request.session.clear()
